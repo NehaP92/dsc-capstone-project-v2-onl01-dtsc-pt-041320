@@ -51,8 +51,34 @@ The train-val-test split consist of 3795,422, and 469 images respectively.
 
 A dummy model is first created using scikit learn's DummyClassifier to compare to and improve upon the results. The DummyClassifier bore very poor results with only 18% accuracy and 25% precision.
 
+Next, a Basic Keras CNN model was built to analyse the results.
 
-> **3 Pre-trained models were explored to use as a base model to build on. Various optimizers, number of layers, drop out, and LeakyReLu layers were also explored using different parameters for optimization**
+
+## Basic Keras CNN
+
+The code snippet below shows the model structure used to build the basic CNN Model. Adam optimizer was used to compile the model.
+
+```
+#Building the basic CNN model
+
+basic_keras=Sequential()
+basic_keras.add(tf.keras.Input(shape=X_train.shape[1:]))
+basic_keras.add(Conv2D(32,(3,3),activation='relu'))
+basic_keras.add(MaxPooling2D((2,2)))
+basic_keras.add(Conv2D(64,(3,3),activation='relu'))
+basic_keras.add(MaxPooling2D((2,2)))
+basic_keras.add(Flatten())
+basic_keras.add(layers.Dense(256,activation='relu'))
+basic_keras.add(layers.Dense(5,activation='softmax'))
+
+basic_keras.compile(loss='categorical_crossentropy',
+              optimizer=optimizers.Adam(lr=0.001),
+              metrics=['acc'])
+```
+
+While the results seemed promising for this model, with high precision (92%), recall (91%) and accuracy (94%), the training and validation curves are far apart and it does not perform as well with the validation data set. The model is overfitted and would not give consistent results with any unknown data.
+
+> **3 Pre-trained models were then explored to use as a base model to build on. Various optimizers, number of layers, drop out, and LeakyReLu layers were also explored using different parameters for optimization**
 
 
 ## Best Pre-Trained Model Transfer VGG16 - Accuracy 97%
